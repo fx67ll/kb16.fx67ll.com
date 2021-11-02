@@ -1,6 +1,6 @@
 <template>
 	<div class="fx67ll-box">
-		<div class="fx67ll-tip">#这是学习的第{{ studentDays }}天，恭喜你距离毕业还有#</div>
+		<div class="fx67ll-tip">☠️这是学习的第{{ studentDays }}天，恭喜你距离毕业还有😅</div>
 		<div class="fx67ll-clock"></div>
 	</div>
 </template>
