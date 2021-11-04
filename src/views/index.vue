@@ -22,8 +22,15 @@
 		mounted() {
 			this.initStuDays();
 			this.initClock();
+			this.consoleMyDays();
 		},
 		methods: {
+			// 输出彩蛋
+			consoleMyDays() {
+				let myDays = moment(moment().format('YYYY-MM-DD')).diff(moment('2022-03-31').format('YYYY-MM-DD'),
+					'day');
+				console.log('fx67ll解决危机的时间仅剩：' + myDays + '天');
+			},
 			// 学习天数计算
 			initStuDays() {
 				let studentDays = moment(moment().format('YYYY-MM-DD')).diff(moment('2021-10-15').format('YYYY-MM-DD'),
