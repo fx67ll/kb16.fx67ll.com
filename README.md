@@ -7,6 +7,8 @@ A Funny Project For Happy!
 * fix justify-content center  
 * add background-color setting  
 * add color setting  
+* add start date setting  
+* add end date setting  
 
 ## 0.1.2.20211119  
 * add failure days  

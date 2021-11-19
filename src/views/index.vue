@@ -13,6 +13,7 @@
 		name: 'fx67llIndex',
 		data() {
 			return {
+				clock: null,
 				studentDays: 0,
 				chnNumChar: ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"],
 				chnUnitSection: ["", "万", "亿", "万亿", "亿亿"],
@@ -20,18 +21,19 @@
 			};
 		},
 		mounted() {
-			this.initStuDays();
-			this.initClock();
+			this.initStuDays('2021-10-15');
+			this.initClock('2022/04/30');
 			this.listenWallpaper();
 		},
 		methods: {
 			// 监听 wallpaper engine
 			listenWallpaper() {
+				let self = this;
 				window.wallpaperPropertyListener = {
 					applyUserProperties: function(properties) {
-						if (properties.customBgcolor) {
+						if (properties.custombgcolor) {
 							// Convert the custom color to 0 - 255 range for CSS usage
-							let customColor = properties.customBgcolor.value.split(' ');
+							let customColor = properties.custombgcolor.value.split(' ');
 							customColor = customColor.map(function(c) {
 								return Math.ceil(c * 255);
 							});
@@ -40,9 +42,9 @@
 							document.getElementById('fx67ll-kb16').style.setProperty('background-color',
 								customColorAsCSS);
 						}
-						if (properties.customTicolor) {
+						if (properties.customticolor) {
 							// Convert the custom color to 0 - 255 range for CSS usage
-							let customColor = properties.customTicolor.value.split(' ');
+							let customColor = properties.customticolor.value.split(' ');
 							customColor = customColor.map(function(c) {
 								return Math.ceil(c * 255);
 							});
@@ -51,19 +53,30 @@
 							document.getElementById('fx67ll-kb16-title').style.setProperty('color',
 								customColorAsCSS);
 						}
+						if (properties.customstarttext) {
+							let customTextAsDate = properties.customstarttext.value;
+							// Eidt startDate，YYYY-MM-DD
+							self.initStuDays(customTextAsDate);
+						}
+						if (properties.customendtext) {
+							let customTextAsDate = properties.customendtext.value;
+							// Eidt endDate，YYYY/MM/DD
+							// 感觉也可以直接用Date对象，但是着实不想再测试了，延迟有点高，先这样了！！！Good！！！
+							self.clock.originalValue = moment(customTextAsDate)._d;
+						}
 					},
 				};
 			},
- 			// 学习天数计算
-			initStuDays() {
-				let studentDays = moment(moment().format('YYYY-MM-DD')).diff(moment('2021-10-15').format('YYYY-MM-DD'),
+			// 学习天数计算
+			initStuDays(date) {
+				let studentDays = moment(moment().format('YYYY-MM-DD')).diff(moment(date).format('YYYY-MM-DD'),
 					'day');
 				this.studentDays = this.NumberToChinese(studentDays);
 			},
 			// 时钟初始化
-			initClock() {
+			initClock(date) {
 				const el = document.querySelector('.fx67ll-clock');
-				const clock = new FlipClock(el, new Date(2022, 3, 31, 24, 0, 0, 0), {
+				this.clock = new FlipClock(el, new Date(date), {
 					face: 'DayCounter', // 类型  
 					showSeconds: true, // 显示秒数  
 					showLabels: true, // 显示文字标识  
