@@ -8,7 +8,7 @@
 			&#12288; Copyright© 2018-{{ this.year }}&#12288;
 			<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">皖ICP备18017174号-2</a>
 		</div>
-		<el-dialog title="属性设置" :visible.sync="dialogVisible" width="200px">
+		<el-dialog title="属性设置" :visible.sync="dialogVisible" width="500px">
 			<div class="color-box">
 				<div class="color-text">修改背景颜色：</div>
 				<div class="color-item">
@@ -21,6 +21,7 @@
 					<el-color-picker v-model="viewTiColor" @change="changeTiColor"></el-color-picker>
 				</div>
 			</div>
+			<div class="color-tips">Tips：颜色设置永久有效，按下快捷键 Ctrl + Shift + Del 清空浏览器"缓存的图片和文件"后刷新页面可以重置当前设置的颜色</div>
 			<span slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="closeDialog">确 定</el-button>
 			</span>
@@ -53,8 +54,22 @@
 			this.consoleMyDays();
 			this.consoleFailDays();
 			this.listenKeys();
+			this.getInitColor();
 		},
 		methods: {
+			// 获取之前修改的颜色
+			getInitColor() {
+				document.getElementById('fx67ll-kb16').style.setProperty('background-color', localStorage.getItem(
+					'viewBgColor'));
+				document.getElementById('fx67ll-kb16-title').style.setProperty('color', localStorage.getItem(
+					'viewTiColor'));
+				if (localStorage.getItem('viewBgColor')) {
+					this.viewBgColor = localStorage.getItem('viewBgColor');
+				}
+				if (localStorage.getItem('viewTiColor')) {
+					this.viewTiColor = localStorage.getItem('viewTiColor');
+				}
+			},
 			// 关闭面板
 			closeDialog() {
 				this.dialogVisible = false;
@@ -62,17 +77,19 @@
 			// 修改标题颜色
 			changeTiColor() {
 				document.getElementById('fx67ll-kb16-title').style.setProperty('color', this.viewTiColor);
+				localStorage.setItem('viewTiColor', this.viewTiColor);
 			},
 			// 修改背景颜色
 			changeBgColor() {
 				document.getElementById('fx67ll-kb16').style.setProperty('background-color', this.viewBgColor);
+				localStorage.setItem('viewBgColor', this.viewBgColor);
 			},
-			// 监听组合键 Ctrl + L
+			// 监听组合键 Ctrl + B
 			listenKeys() {
 				let self = this;
 				document.onkeydown = function(event) {
 					var e = event || window.event || arguments.callee.caller.arguments[0];
-					if (e.ctrlKey && e.keyCode === 76) {
+					if (e.ctrlKey && e.keyCode === 66) {
 						self.dialogVisible = true;
 					}
 				};
@@ -80,7 +97,7 @@
 			// 提示
 			consoleTips() {
 				console.log('---------------Tips---------------');
-				console.log('按下 Ctrl + L 可设置部分属性！');
+				console.log('按下 Ctrl + B 可设置部分属性！');
 				console.log('----------------------------------');
 			},
 			// 失败日
@@ -227,17 +244,22 @@
 			position: absolute;
 			bottom: 0;
 			user-select: text;
+			color: #dcdcdc;
 		}
 
 		.color-box {
 			width: 100%;
 			display: flex;
-			justify-content: space-between;
+			justify-content: flex-start;
 			align-items: center;
 
 			.color-text {
 				font-size: 16px;
 			}
+		}
+
+		.color-tips {
+			margin-top: 10px;
 		}
 	}
 </style>
