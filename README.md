@@ -1,6 +1,10 @@
 # kb16.fx67ll.com
 A Funny Project For Happy!
 
+## 0.2.0.20211119
+* new version for wallpaper engine  
+* delete color picker function  
+
 ## 0.1.2.20211119  
 * add failure days  
 * add color picker function  
