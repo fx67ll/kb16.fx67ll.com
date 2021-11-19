@@ -1,6 +1,6 @@
 <template>
 	<div id="fx67ll-kb16" class="fx67ll-box">
-		<div id="fx67ll-kb16-title" class="fx67ll-tip">☠️这是学习的第{{ studentDays }}天，恭喜你距离毕业还有😅</div>
+		<div id="fx67ll-kb16-title" class="fx67ll-tip">☠️这是修炼的第{{ studentDays }}天，恭喜你距离结束还有😅</div>
 		<div class="fx67ll-clock"></div>
 		<div class="fx67ll-footer">
 			Designed & Powered by
@@ -21,7 +21,21 @@
 					<el-color-picker v-model="viewTiColor" @change="changeTiColor"></el-color-picker>
 				</div>
 			</div>
-			<div class="color-tips">Tips：颜色设置永久有效，按下快捷键 Ctrl + Shift + Del 清空浏览器"缓存的图片和文件"后刷新页面可以重置当前设置的颜色</div>
+			<div class="color-box">
+				<div class="color-text">修改开始日期：</div>
+				<div class="color-item">
+					<el-date-picker v-model="viewStDate" format="yyyy-MM-dd" type="date" placeholder="选择日期"
+						@change="changeStDate"></el-date-picker>
+				</div>
+			</div>
+			<div class="color-box">
+				<div class="color-text">修改结束日期：</div>
+				<div class="color-item">
+					<el-date-picker v-model="viewEnDate" format="yyyy/MM/dd" type="date" placeholder="选择日期"
+						@change="changeEnDate"></el-date-picker>
+				</div>
+			</div>
+			<div class="color-tips">Tips：颜色设置永久有效，按下快捷键 Ctrl + Shift + Del 清空浏览器"缓存的图片和文件"后刷新页面可以重置当前设置的颜色和日期</div>
 			<span slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="closeDialog">确 定</el-button>
 			</span>
@@ -37,6 +51,7 @@
 		name: 'fx67llIndex',
 		data() {
 			return {
+				clock: null,
 				studentDays: 0,
 				chnNumChar: ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"],
 				chnUnitSection: ["", "万", "亿", "万亿", "亿亿"],
@@ -44,35 +59,53 @@
 				year: moment().format('YYYY'),
 				dialogVisible: false,
 				viewBgColor: '#ffffff',
-				viewTiColor: '#FF0000'
+				viewTiColor: '#FF0000',
+				viewStDate: '2021-10-15',
+				viewEnDate: '2022/04/30'
 			};
 		},
 		mounted() {
-			this.initStuDays();
+			this.countStuDays(this.viewStDate);
 			this.initClock();
-			this.consoleTips();
-			this.consoleMyDays();
-			this.consoleFailDays();
 			this.listenKeys();
-			this.getInitColor();
+			this.getHistoryData();
+			this.consoleTips();
 		},
 		methods: {
-			// 获取之前修改的颜色
-			getInitColor() {
-				document.getElementById('fx67ll-kb16').style.setProperty('background-color', localStorage.getItem(
-					'viewBgColor'));
-				document.getElementById('fx67ll-kb16-title').style.setProperty('color', localStorage.getItem(
-					'viewTiColor'));
+			// 获取历史数据
+			getHistoryData() {
 				if (localStorage.getItem('viewBgColor')) {
 					this.viewBgColor = localStorage.getItem('viewBgColor');
+					document.getElementById('fx67ll-kb16').style.setProperty('background-color', localStorage.getItem(
+						'viewBgColor'));
 				}
 				if (localStorage.getItem('viewTiColor')) {
 					this.viewTiColor = localStorage.getItem('viewTiColor');
+					document.getElementById('fx67ll-kb16-title').style.setProperty('color', localStorage.getItem(
+						'viewTiColor'));
+				}
+				if (localStorage.getItem('viewStDate')) {
+					this.viewStDate = localStorage.getItem('viewStDate');
+					this.countStuDays(this.viewStDate);
+				}
+				if (localStorage.getItem('viewEnDate')) {
+					this.viewEnDate = localStorage.getItem('viewEnDate');
+					this.clock.originalValue = moment(this.viewEnDate)._d;
 				}
 			},
 			// 关闭面板
 			closeDialog() {
 				this.dialogVisible = false;
+			},
+			// 修改开始日期
+			changeStDate(value) {
+				this.countStuDays(value);
+				localStorage.setItem('viewStDate', value);
+			},
+			// 修改结束日期
+			changeEnDate(value) {
+				this.clock.originalValue = moment(value)._d;
+				localStorage.setItem('viewEnDate', value);
 			},
 			// 修改标题颜色
 			changeTiColor() {
@@ -99,6 +132,8 @@
 				console.log('---------------Tips---------------');
 				console.log('按下 Ctrl + B 可设置部分属性！');
 				console.log('----------------------------------');
+				this.consoleMyDays();
+				this.consoleFailDays();
 			},
 			// 失败日
 			consoleFailDays() {
@@ -109,20 +144,20 @@
 			},
 			// 输出彩蛋
 			consoleMyDays() {
-				let myDays = moment(moment('2022-03-31').format('YYYY-MM-DD')).diff(moment().format('YYYY-MM-DD'),
+				let myDays = moment(moment(this.viewEnDate).format('YYYY-MM-DD')).diff(moment().format('YYYY-MM-DD'),
 					'day');
 				console.log('fx67ll解决危机的时间仅剩：' + myDays + '天');
 			},
 			// 学习天数计算
-			initStuDays() {
-				let studentDays = moment(moment().format('YYYY-MM-DD')).diff(moment('2021-10-15').format('YYYY-MM-DD'),
+			countStuDays(date) {
+				let studentDays = moment(moment().format('YYYY-MM-DD')).diff(moment(date).format('YYYY-MM-DD'),
 					'day');
 				this.studentDays = this.NumberToChinese(studentDays);
 			},
 			// 时钟初始化
 			initClock() {
 				const el = document.querySelector('.fx67ll-clock');
-				const clock = new FlipClock(el, new Date(2022, 4, 31, 24, 0, 0, 0), {
+				this.clock = new FlipClock(el, new Date(this.viewEnDate), {
 					face: 'DayCounter', // 类型  
 					showSeconds: true, // 显示秒数  
 					showLabels: true, // 显示文字标识  
@@ -196,21 +231,8 @@
 </script>
 <style type="text/css">
 	.flip-clock {
-		width: auto;
 		font-size: 2vw;
-		left: 6.5vw;
-	}
-
-	.flip-clock-single {
-		left: 6.5vw;
-	}
-
-	.flip-clock-double {
-		left: 6.5vw;
-	}
-
-	.flip-clock- {
-		left: 6.5vw;
+		justify-content: center;
 	}
 </style>
 <style lang="less" scoped="scoped">
@@ -218,7 +240,7 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
-		color: #ffffff;
+		background-color: #ffffff;
 		.ban-user-select();
 
 		.fx67ll-tip {
@@ -252,6 +274,7 @@
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
+			margin-top: 5px;
 
 			.color-text {
 				font-size: 16px;
