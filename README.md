@@ -4,6 +4,9 @@ A Funny Project For Happy!
 ## 0.2.0.20211119
 * new version for wallpaper engine  
 * delete color picker function  
+* fix justify-content center  
+* add background-color setting  
+* add color setting  
 
 ## 0.1.2.20211119  
 * add failure days  

@@ -1,6 +1,6 @@
 <template>
 	<div id="fx67ll-kb16" class="fx67ll-box">
-		<div id="fx67ll-kb16-title" class="fx67ll-tip">☠️这是学习的第{{ studentDays }}天，恭喜你距离毕业还有😅</div>
+		<div id="fx67ll-kb16-title" class="fx67ll-tip">☠️这是修炼的第{{ studentDays }}天，恭喜你距离结束仅剩😅</div>
 		<div class="fx67ll-clock"></div>
 	</div>
 </template>
@@ -22,24 +22,39 @@
 		mounted() {
 			this.initStuDays();
 			this.initClock();
-			this.consoleMyDays();
-			this.consoleFailDays();
+			this.listenWallpaper();
 		},
 		methods: {
-			// 失败日
-			consoleFailDays() {
-				let failDays = moment(moment('20211113').format('YYYY-MM-DD')).diff(moment('20210823').format(
-						'YYYY-MM-DD'),
-					'day');
-				console.log('fx67ll已于2021年11月13日获得失败，持续时间仅' + failDays + '天');
+			// 监听 wallpaper engine
+			listenWallpaper() {
+				window.wallpaperPropertyListener = {
+					applyUserProperties: function(properties) {
+						if (properties.customBgcolor) {
+							// Convert the custom color to 0 - 255 range for CSS usage
+							let customColor = properties.customBgcolor.value.split(' ');
+							customColor = customColor.map(function(c) {
+								return Math.ceil(c * 255);
+							});
+							let customColorAsCSS = 'rgb(' + customColor + ')';
+							// Change background color
+							document.getElementById('fx67ll-kb16').style.setProperty('background-color',
+								customColorAsCSS);
+						}
+						if (properties.customTicolor) {
+							// Convert the custom color to 0 - 255 range for CSS usage
+							let customColor = properties.customTicolor.value.split(' ');
+							customColor = customColor.map(function(c) {
+								return Math.ceil(c * 255);
+							});
+							let customColorAsCSS = 'rgb(' + customColor + ')';
+							// Change title color
+							document.getElementById('fx67ll-kb16-title').style.setProperty('color',
+								customColorAsCSS);
+						}
+					},
+				};
 			},
-			// 输出彩蛋
-			consoleMyDays() {
-				let myDays = moment(moment('2022-03-31').format('YYYY-MM-DD')).diff(moment().format('YYYY-MM-DD'),
-					'day');
-				console.log('fx67ll解决危机的时间仅剩：' + myDays + '天');
-			},
-			// 学习天数计算
+ 			// 学习天数计算
 			initStuDays() {
 				let studentDays = moment(moment().format('YYYY-MM-DD')).diff(moment('2021-10-15').format('YYYY-MM-DD'),
 					'day');
@@ -48,7 +63,7 @@
 			// 时钟初始化
 			initClock() {
 				const el = document.querySelector('.fx67ll-clock');
-				const clock = new FlipClock(el, new Date(2022, 4, 31, 24, 0, 0, 0), {
+				const clock = new FlipClock(el, new Date(2022, 3, 31, 24, 0, 0, 0), {
 					face: 'DayCounter', // 类型  
 					showSeconds: true, // 显示秒数  
 					showLabels: true, // 显示文字标识  
@@ -122,21 +137,8 @@
 </script>
 <style type="text/css">
 	.flip-clock {
-		width: auto;
 		font-size: 2vw;
-		left: 6.5vw;
-	}
-
-	.flip-clock-single {
-		left: 6.5vw;
-	}
-
-	.flip-clock-double {
-		left: 6.5vw;
-	}
-
-	.flip-clock- {
-		left: 6.5vw;
+		justify-content: center;
 	}
 </style>
 <style lang="less" scoped="scoped">
@@ -144,7 +146,7 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
-		color: #ffffff;
+		background-color: #ffffff;
 		.ban-user-select();
 
 		.fx67ll-tip {
