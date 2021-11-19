@@ -2,12 +2,12 @@
 	<div id="fx67ll-kb16" class="fx67ll-box">
 		<div id="fx67ll-kb16-title" class="fx67ll-tip">☠️这是修炼的第{{ studentDays }}天，恭喜你距离结束还有😅</div>
 		<div class="fx67ll-clock"></div>
-		<div class="fx67ll-footer">
+		<!-- <div class="fx67ll-footer">
 			Designed & Powered by
 			<a href="https://fx67ll.com" target="_blank">fx67ll</a>
 			&#12288; Copyright© 2018-{{ this.year }}&#12288;
 			<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">皖ICP备18017174号-2</a>
-		</div>
+		</div> -->
 		<el-dialog title="属性设置" :visible.sync="dialogVisible" width="500px">
 			<div class="color-box">
 				<div class="color-text">修改背景颜色：</div>
