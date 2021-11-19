@@ -5,6 +5,8 @@ A Funny Project For Happy!
 * add failure days  
 * add color picker function  
 * add date picker function  
+* match all device  
+* add typiacl animation  
 
 ## 0.1.1.20211103  
 * fix apple browser `new Date('yyyy-mm-dd hh:mm:ss')` NaN bug  
