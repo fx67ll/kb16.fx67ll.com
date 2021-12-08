@@ -1,6 +1,9 @@
 # kb16.fx67ll.com
 A Funny Project For Happy!
 
+## 0.1.3.20211208
+* delete useless ttf  
+
 ## 0.1.2.20211119  
 * add failure days  
 * add color picker function  
